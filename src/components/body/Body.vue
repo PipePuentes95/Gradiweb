@@ -39,7 +39,7 @@ export default {
     data() {
         return {
             today: new Date(),
-            daysName: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday", "Monday", "Tuesday"]
+            daysName: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday", "Monday", "Tuesday", "Wednesday"]
         }
     }
 }

@@ -35,7 +35,7 @@ export default {
         .then((res) => {
           this.current = res.body.current;
           this.current.weather = res.body.current.weather[0];
-          this.forecast = res.body.daily.slice(0,3)
+          this.forecast = res.body.daily.slice(1,4)
         });
     }
     localWeather();
@@ -47,7 +47,6 @@ export default {
       let data = {}
       this.$http.get(url)
         .then((res) => {
-          console.log(res.body);
           this[ciudad] = res.body;
           this[ciudad].weather = res.body.weather[0];
         });
