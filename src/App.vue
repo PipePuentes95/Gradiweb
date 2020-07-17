@@ -1,48 +1,70 @@
 <template>
   <div id="app">
-   
+    <Header :current="current" />
+    <Body
+      :forecast="forecast"
+      :paris="paris"
+      :lyon="lyon"
+    />
   </div>
 </template>
 
 <script>
-
+import Header from './components/header/Header';
+import Body from './components/body/Body';
 export default {
   name: 'App',
+  components: {
+    Header,
+    Body
+  },
   data() {
     return {
-      data: {}
+      current: {},
+      forecast: [],
+      paris: {},
+      lyon: {}
     }
   },
-  beforeCreate() {
-    const consultAPI = () => {
+  created() {
+    const localWeather = () => {
       const APIKEY = "acbe571709d34e4160a6ece108b21586";
-      // const url = `http://api.openweathermap.org/data/2.5/weather?q=bogota,colombia&appid=${APIKEY}`;
       // Este trae el del dia presente y 7 dias en adelante
       const url = `https://api.openweathermap.org/data/2.5/onecall?lat=4.60971&lon=-74.08175&exclude=minutely,hourly,&appid=${APIKEY}`;
+      this.$http.get(url)
+        .then((res) => {
+          this.current = res.body.current;
+          this.current.weather = res.body.current.weather[0];
+          this.forecast = res.body.daily.slice(0,3)
+        });
+    }
+    localWeather();
 
-      let req =  new XMLHttpRequest();
-      req.open("GET", url, true);
-      
-        console.log(req);
-      req.onreadystatechange = () => {
-        req.status === 200 ? this.data = req.response  : console.log('Error');
-      }
-      req.send(null);
+    const InternationalWeather = (ciudad) => {
+      const APIKEY = "acbe571709d34e4160a6ece108b21586";
+      // Este trae el del dia presente y 7 dias en adelante
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${APIKEY}`;
+      let data = {}
+      this.$http.get(url)
+        .then((res) => {
+          console.log(res.body);
+          this[ciudad] = res.body;
+          this[ciudad].weather = res.body.weather[0];
+        });
     }
-    consultAPI();
-  },
-  computed: {
-    formatData() {
-      return JSON.parse(this.data)
-    }
-    
+    InternationalWeather('paris');
+    InternationalWeather('lyon');
   }
-  
 }
 </script>
 
 <style lang="scss">
-#app {
-  
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  #app {
+    font-family: 'Montserrat', sans-serif;
+  }
 </style>
